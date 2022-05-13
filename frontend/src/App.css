@@ -1,0 +1,78 @@
+.App {
+    text-align: center;
+}
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+.App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: calc(20px + 2vmin);
+    color: white;
+    font-weight: bold;
+}
+
+.App-link {
+    color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.App-outer {
+    display: flex;
+    flex-direction: row;
+}
+
+.App-inner {
+    margin: 25px;
+    font-size: calc(1px + 2vmin);
+}
+
+.App-below {
+    margin: 25px;
+    font-size: calc(1px + 1vmin);
+}
+
+.App-status-container {
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-y: scroll;
+    height: 320px;
+}
+
+.App-status-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.App-status-cell-timestamp {
+    text-align: center;
+    font-size: calc(1px + 1vmin);
+    width: 250px;
+}
+
+.App-status-cell-message {
+    text-align: left;
+    font-size: calc(1px + 1vmin);
+    width: 500px;
+}
