@@ -1,0 +1,100 @@
+version: "3.9"
+
+services:
+
+  nats:
+    restart: unless-stopped
+    build:
+      context: ./nats/
+      dockerfile: Dockerfile
+    volumes:
+      - ./nats/nats-server.conf:/etc/nats/nats-server.conf
+    ports:
+      - "4222:4222"
+      - "6222:6222"
+      - "8222:8222"
+
+  worker:
+    restart: unless-stopped
+    depends_on:
+      - nats
+    build:
+      context: ./worker/
+      dockerfile: Dockerfile
+    deploy:
+      mode: replicated
+      replicas: 4
+
+  dkron:
+    restart: unless-stopped
+    depends_on:
+      - nats
+      - worker
+    build:
+      context: ./dkron/
+      dockerfile: Dockerfile
+    volumes:
+      - ./dkron/dkron.yml:/etc/dkron/dkron.yml
+    ports:
+      - "6868:6868"
+      - "8181:8080"
+      - "8946:8946"
+
+  redis:
+    restart: unless-stopped
+    build:
+      context: ./redis/
+      dockerfile: Dockerfile
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+
+  centrifugo:
+    restart: unless-stopped
+    depends_on:
+      - redis
+    build:
+      context: ./centrifugo/
+      dockerfile: Dockerfile
+    volumes:
+      - ./centrifugo/config.yml:/centrifugo/config.yml
+    ports:
+      - "8000:8000"
+
+  postgres:
+    restart: unless-stopped
+    build:
+      context: ./postgres/
+      dockerfile: Dockerfile
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+    environment:
+      - "POSTGRES_USERNAME=postgres"
+      - "POSTGRES_PASSWORD=sandbox123"
+      - "POSTGRES_DB=sandbox"
+    ports:
+      - "5432:5432"
+
+  hasura:
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    build:
+      context: ./hasura/
+      dockerfile: Dockerfile
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:sandbox123@postgres:5432/sandbox
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      # TODO: work out auth
+      # HASURA_GRAPHQL_ADMIN_SECRET: 's@ndp1t123!@#'
+    ports:
+      - "8080:8080"
+
+  frontend:
+    restart: unless-stopped
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "80:3000"

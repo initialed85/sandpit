@@ -1,0 +1,22 @@
+token_hmac_secret_key: bbdd0724-beec-44fc-b31d-388258752b2f
+
+admin: true
+admin_password: s@ndp1t123!@#
+admin_secret: 1e6fb06b-aae3-4731-9232-8780b75b77dd
+
+api_key: b925ab16-fd05-4f23-bed5-1c70044790f7
+
+allowed_origins: ["*"]
+
+engine: "redis"
+
+redis_address: redis:6379
+
+anonymous: true
+publish: true
+subscribe_to_publish: false
+presence: true
+join_leave: true
+history_size: 10
+history_ttl: "300s"
+recover: true
